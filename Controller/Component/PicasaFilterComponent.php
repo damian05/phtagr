@@ -51,7 +51,10 @@ class PicasaFilterComponent extends BaseFilterComponent {
       }
       $facesnames = array();
       foreach ($faces as $face) {
-        $facesnames[]= $face['name'];
+        if (isset($face['name'])) {
+          //keep only faces with names in contacts.xml, i.e. known faces
+          $facesnames[]= $face['name'];
+        }
       }
       $values = array_unique($facesnames);
       $media['Field']['face'] = $values;
@@ -100,6 +103,5 @@ class PicasaFilterComponent extends BaseFilterComponent {
     }
     return $picasaFiles;
   }
-
-
+  
 }
