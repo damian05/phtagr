@@ -24,7 +24,7 @@ class ExplorerController extends AppController
   var $helpers = array('Form', 'Html', 'ImageData', 'Time', 'ExplorerMenu', 'Rss', 'Search', 'Navigator', 'Tab', 'Breadcrumb', 'Autocomplete');
 
   var $crumbs = array();
-  var $paginateActions = array('category', 'date', 'edit', 'group', 'index', 'location', 'sublocation', 'city', 'state', 'country', 'query', 'tag', 'user', 'view', 'quicksearch', 'selection');
+  var $paginateActions = array('category', 'date', 'edit', 'group', 'index', 'location', 'sublocation', 'city', 'state', 'country', 'query', 'tag', 'face', 'user', 'view', 'quicksearch', 'selection');
 
   public function implementedEvents() {
     $events = parent::implementedEvents();
@@ -89,9 +89,11 @@ class ExplorerController extends AppController
   }
 
   public function autocomplete($type) {
-    if (in_array($type, array('tag', 'category', 'city', 'sublocation', 'state', 'country', 'aclgroup'))) {
+    if (in_array($type, array('tag', 'face', 'category', 'city', 'sublocation', 'state', 'country', 'aclgroup'))) {
       if ($type == 'tag') {
         $value = $this->request->data['Field']['keyword'];
+      } else if ($type == 'face') {
+        $value = $this->request->data['Field']['face'];
       } else if ($type == 'aclgroup') {
         $value = $this->request->data['Group']['names'];
       } else {
@@ -103,6 +105,7 @@ class ExplorerController extends AppController
         'category' => '_getAssociation',
         'city' => '_getAssociation',
         'country' => '_getAssociation',
+        'face' => '_getAssociation',
         'from' => 'true',
         'group' => '_getAssociation',
         'location' => '_getAssociation',
@@ -186,6 +189,10 @@ class ExplorerController extends AppController
     foreach ($tags as $tag) {
       $this->request->data[] = 'tag:' . $prefix . $tag;
     }
+    $faces = $this->Media->Field->complete('face', $needle);
+    foreach ($faces as $face) {
+      $this->request->data[] = 'face:' . $prefix . $face;
+    }
     $categories = $this->Media->Field->complete('category', $needle);
     foreach ($categories as $category) {
       $this->request->data[] = 'category:' . $prefix . $category;
@@ -239,6 +246,9 @@ class ExplorerController extends AppController
     switch ($type) {
       case 'tag':
         $result = $this->Media->Field->complete('keyword', $normalized);
+        break;
+      case 'face':
+        $result = $this->Media->Field->complete('face', $normalized);
         break;
       case 'location':
         $result = $this->Media->Field->complete(array('sublocation', 'city', 'state', 'country'), $normalized);
@@ -369,7 +379,7 @@ class ExplorerController extends AppController
       return;
     }
     $crumbs = array("user:$username");
-    if ($param && $value && in_array($param, array('tag', 'category', 'location'))) {
+    if ($param && $value && in_array($param, array('tag', 'face', 'category', 'location'))) {
       $values = preg_split('/\s*,\s*/', trim($value));
       foreach ($values as $value) {
         $crumbs[] = "$param:$value";
@@ -452,6 +462,16 @@ class ExplorerController extends AppController
     $this->render('index');
   }
 
+  public function face($faces) {
+    $faces = preg_split('/\s*,\s*/', trim($faces));
+    $crumbs = array();
+    foreach($faces as $face) {
+      $crumbs[] = 'face:' . $face;
+    }
+    $this->crumbs = am($crumbs, $this->Search->urlToCrumbs($this->request->url, 3));
+    $this->render('index');
+  }
+  
   public function category($categories) {
     $categories = preg_split('/\s*,\s*/', trim($categories));
     $crumbs = array();

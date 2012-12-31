@@ -28,7 +28,8 @@ class Field extends AppModel {
       );
   var $listFields = array(
       'keyword',
-      'category'
+      'category',
+      'face'
       );
 
   /**

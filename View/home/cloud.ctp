@@ -8,7 +8,18 @@ if (isset($cloudCategories) && count($cloudCategories)) {
 }
 ?>
 </div>
-   
+
+<h3><?php echo __("Faces"); ?></h3>
+<div class="cloud">
+<?php
+if (isset($cloudFaces) && count($cloudFaces)) {
+  echo $this->Cloud->cloud($cloudFaces, '/explorer/face/');
+} else {
+  echo '<p>' . __("No faces assigned") . '</p>';
+}
+?>
+</div>
+
 <h3><?php echo __("Tags"); ?></h3>
 <div class="cloud">
 <?php

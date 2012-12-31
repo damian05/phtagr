@@ -46,6 +46,7 @@ class SearchComponent extends Component
     'from' => array('rule' => array('custom', '/^\d{4}-\d{2}-\d{2}([ T]\d{2}:\d{2}:\d{2})?$/')),
     'folder' => 'notEmpty',
     'field_value' => array('rule' => array('notEmpty'), 'multiple' => true),
+    'face' => array('rule' => array('maxLength', 30), 'multiple' => true),
     'group' => 'notEmpty',
     'geo' => array('rule' => array('inList', array('any', 'none'))),
     'key' => false,
@@ -72,7 +73,7 @@ class SearchComponent extends Component
     'visibility' => array('rule' => array('inList', array('private', 'group', 'user', 'public'))),
     );
 
-  var $listTerms = array('any', 'category', 'city', 'country', 'group',
+  var $listTerms = array('any', 'category', 'city', 'country','face', 'group',
       'location', 'state', 'sublocation', 'similar', 'tag');
   /**
    * Array of disabled parameter names

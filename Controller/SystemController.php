@@ -237,6 +237,7 @@ class SystemController extends AppController {
     $data['comments'] = $this->Media->Comment->find('count');
     $allFields = $this->Media->Field->find('all');
     $data['tags'] = count(Set::extract('/Field[name=keyword]/data', $allFields));
+    $data['faces'] = count(Set::extract('/Field[name=face]/data', $allFields));
     $data['categories'] = count(Set::extract('/Field[name=category]/data', $allFields));
     $data['locations'] = count(Set::extract('/Field[name=/(sublocation|city|state|country)/]/data', $allFields));
     $this->set('data', $data);

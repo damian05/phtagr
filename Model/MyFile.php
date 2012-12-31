@@ -32,7 +32,8 @@ class MyFile extends AppModel
     FILE_TYPE_VIDEOTHUMB => array('thm'),
     FILE_TYPE_TEXT => array('txt'),
     FILE_TYPE_GPS => array('log'),
-    FILE_TYPE_SIDECAR => array('xmp')
+    FILE_TYPE_SIDECAR => array('xmp'),
+    FILE_TYPE_PICASA=> array('ini')
     );
 
   var $actsAs = array('Type', 'Flag');

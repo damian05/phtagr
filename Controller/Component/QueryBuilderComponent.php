@@ -35,6 +35,7 @@ class QueryBuilderComponent extends Component {
     'country' => array('field' => 'Field.data', 'with' => array('Field.name' => 'country')),
     'created_from' => array('field' => 'Media.created', 'operand' => '>='),
     'east' => array('field' => 'Media.longitude', 'operand' => '<='),
+    'face' => array('field' => 'Field.data', 'with' => array('Field.name' => 'face')),
     'field_value' => array('field' => 'Field.data'),
     'folder' => array('field' => 'File.path', 'custom' => '_buildFolder'),
     'from' => array('field' => 'Media.date', 'operand' => '>='),
@@ -489,7 +490,7 @@ class QueryBuilderComponent extends Component {
    * @return array Prepared parameter
    */
   private function _prepareParams(&$data) {
-    $noneNames = array('tag', 'category', 'location', 'sublocation', 'city', 'state', 'country', 'geo');
+    $noneNames = array('face','tag', 'category', 'location', 'sublocation', 'city', 'state', 'country', 'geo');
     foreach ($data as $name => $values) {
       if (is_array($values)) {
         foreach ($values as $i => $value) {

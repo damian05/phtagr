@@ -38,6 +38,8 @@
   ksort($tagUrls);
   $categoryUrls = $this->ImageData->getAllExtendSearchUrls($crumbs, $user, 'category', array_unique(Set::extract('/Field[name=category]/data', $this->request->data)));
   ksort($categoryUrls);
+  $faceUrls = $this->ImageData->getAllExtendSearchUrls($crumbs, $user, 'face', array_unique(Set::extract('/Field[name=face]/data', $this->request->data)));
+  ksort($faceUrls);
   $sublocationUrls = $this->ImageData->getAllExtendSearchUrls($crumbs, $user, 'sublocation', array_unique(Set::extract('/Field[name=sublocation]/data', $this->request->data)));
   ksort($sublocationUrls);
   $cityUrls = $this->ImageData->getAllExtendSearchUrls($crumbs, $user, 'city', array_unique(Set::extract('/Field[name=city]/data', $this->request->data)));
@@ -57,6 +59,13 @@
   if (count($categoryUrls)) {
     echo "<p>" . __("Categories") . " \n";
     foreach ($categoryUrls as $name => $urls) {
+      echo $this->ImageData->getExtendSearchLinks($urls, $name) . "\n";
+    }
+    echo "</p>\n";
+  }
+  if (count($faceUrls)) {
+    echo "<p>" . __("Faces") . " \n";
+    foreach ($faceUrls as $name => $urls) {
       echo $this->ImageData->getExtendSearchLinks($urls, $name) . "\n";
     }
     echo "</p>\n";

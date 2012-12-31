@@ -44,7 +44,8 @@ class ExiftoolComponent extends Component {
       'sublocation' => 'Sub-location',
       'city' => 'City',
       'state' => 'Province-State',
-      'country' => 'Country-PrimaryLocationName'
+      'country' => 'Country-PrimaryLocationName',
+      'face' => 'RegionPersonDisplayName'
       );
 
   //XMP
@@ -55,7 +56,8 @@ class ExiftoolComponent extends Component {
       'sublocation' => 'Location',
       'city' => 'City',
       'state' => 'State',
-      'country' => 'Country'
+      'country' => 'Country',
+      'face' => 'RegionPersonDisplayName'
       );
 
   public function initialize(Controller $controller) {
@@ -572,7 +574,7 @@ class ExiftoolComponent extends Component {
     //IPTC - location
     $iptc = array('-TimeCreated', '-SupplementalCategories', '-Keywords', '-Subject', '-City', '-Sub-location', '-Province-State', '-Country-PrimaryLocationName', '-Caption');//'-IPTC:DateCreated' - imported in XMP
     //XMP - location
-    $xmp = array('-Location', '-State', '-Country', '-PhtagrGroups', '-XMP-photoshop:DateCreated', '-XMP-dc:Date', '-XMP-tiff:DateTime');
+    $xmp = array('-Location', '-State', '-Country', '-PhtagrGroups', '-XMP-photoshop:DateCreated', '-XMP-dc:Date', '-XMP-tiff:DateTime', '-RegionPersonDisplayName');
     $video = array('-Width', '-Height', '-Duration');
 
     $this->_writeCommands($this->stdin, $base);

@@ -78,7 +78,7 @@ class FilterManagerComponent extends Component {
       Logger::err("Model MyFile and Media is not found");
       return false;
     }
-    $this->loadFilter(array('ImageFilter', 'ReadOnlyImageFilter', 'VideoFilter', 'GpsFilter', 'SidecarFilter'));
+    $this->loadFilter(array('ImageFilter', 'ReadOnlyImageFilter', 'VideoFilter', 'GpsFilter', 'SidecarFilter', 'PicasaFilter'));
 
     $this->writeEmbeddedEnabled = $this->controller->getOption($this->writeEmbeddedEnabledOption);
     $this->writeSidecarEnabled = $this->controller->getOption($this->writeSidecarEnabledOption);

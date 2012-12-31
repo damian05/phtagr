@@ -34,7 +34,8 @@
     'any' => __('Any'),
     'xmp' => __('XMP (sidecar)'),
     'jpg' => __('JPG'),
-    'avi' => __('AVI'));
+    'avi' => __('AVI'),
+    'ini' => __('.picasa.ini'));
    $selected = 'any';
    echo $this->Form->input('Browser.options.extensions', array('type' => 'select', 'options' => $options, 'multiple' => 'checkbox', 'selected' => $selected, 'label' => __("Select extensions to be imported:")));
 ?>

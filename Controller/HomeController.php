@@ -82,6 +82,7 @@ class HomeController extends AppController
 
     $this->set('cloudTags', $this->Media->cloud($user, array('conditions' => array('Field.name' => 'keyword'), 'count' => 400)));
     $this->set('cloudCategories', $this->Media->cloud($user, array('conditions' => array('Field.name' => 'category'), 'count' => 100)));
+    $this->set('cloudFaces', $this->Media->cloud($user, array('conditions' => array('Field.name' => 'face'), 'count' => 100)));
   }
 }
 ?>
