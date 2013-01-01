@@ -64,7 +64,7 @@ class PicasaFilterComponent extends BaseFilterComponent {
     $dbTime = strtotime($file['File']['time']);
     //Logger::debug("db $dbTime file $fileTime");
     $forceRead = false;
-    if ($fileTime > $dbTime) {
+    if ($fileTime > $dbTime || $fileTime > $readed) {
       Logger::warn("File '$filename' was changed without notice of phTagr! Read the file again.");
       // @todo Action if file is newer than phtagr. Eg. force rereada
       $forceRead = true;
@@ -112,6 +112,7 @@ class PicasaFilterComponent extends BaseFilterComponent {
       $importLog = $this->FilterManager->_importlog($importLog, $path.$picasaFile);
     }
     
+    $this->controller->MyFile->update($file);
     $this->controller->MyFile->updateReaded($file);
     //$this->controller->MyFile->setFlag($file, FILE_FLAG_DEPENDENT);
     return $filename;
