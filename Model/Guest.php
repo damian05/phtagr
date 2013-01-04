@@ -3,12 +3,12 @@
  * PHP versions 5
  *
  * phTagr : Tag, Browse, and Share Your Photos.
- * Copyright 2006-2012, Sebastian Felis (sebastian@phtagr.org)
+ * Copyright 2006-2013, Sebastian Felis (sebastian@phtagr.org)
  *
  * Licensed under The GPL-2.0 License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2006-2012, Sebastian Felis (sebastian@phtagr.org)
+ * @copyright     Copyright 2006-2013, Sebastian Felis (sebastian@phtagr.org)
  * @link          http://www.phtagr.org phTagr
  * @package       Phtagr
  * @since         phTagr 2.2b3
@@ -43,7 +43,10 @@ class Guest extends AppModel
       'message' => 'Password must be between 6 and 32 characters long.'),
     'email' => array(
       'rule' => array('email'),
-      'message' => 'Email address is not valid')
+      'message' => 'Email address is not valid'),
+    'notify_interval' => array(
+      'rule' => array('inList', array('0', '1800', '3600', '86400', '604800', '2592000')),
+      'message' => 'Invalid notification interval')
     );
 
   public function afterFind($result, $primary = false) {
@@ -62,12 +65,12 @@ class Guest extends AppModel
         unset($this->data['Guest']['confirm']);
         unset($this->data['Guest']['password']);
       } elseif (empty($this->data['Guest']['password'])) {
-        $this->invalidate('password', 'Password not given');
+        $this->invalidate('password', __('Password not given'));
       } elseif (empty($this->data['Guest']['confirm'])) {
-        $this->invalidate('confirm', 'Password confirmation is missing');
+        $this->invalidate('confirm', __('Password confirmation is missing'));
       } elseif ($this->data['Guest']['password'] != $this->data['Guest']['confirm']) {
-        $this->invalidate('password', 'Password confirmation mismatch');
-        $this->invalidate('confirm', 'Password confirmation mismatch');
+        $this->invalidate('password', __('Password confirmation mismatch'));
+        $this->invalidate('confirm', __('Password confirmation mismatch'));
       }
     }
   }
@@ -97,6 +100,4 @@ class Guest extends AppModel
     return $data;
   }
 
-
 }
-?>

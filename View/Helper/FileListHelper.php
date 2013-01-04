@@ -3,12 +3,12 @@
  * PHP versions 5
  *
  * phTagr : Tag, Browse, and Share Your Photos.
- * Copyright 2006-2012, Sebastian Felis (sebastian@phtagr.org)
+ * Copyright 2006-2013, Sebastian Felis (sebastian@phtagr.org)
  *
  * Licensed under The GPL-2.0 License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2006-2012, Sebastian Felis (sebastian@phtagr.org)
+ * @copyright     Copyright 2006-2013, Sebastian Felis (sebastian@phtagr.org)
  * @link          http://www.phtagr.org phTagr
  * @package       Phtagr
  * @since         phTagr 2.2b3
@@ -77,7 +77,7 @@ class FileListHelper extends AppHelper
     $row[] = '';
     $actions = array();
     if ($options['isInternal']) {
-      $actions[] = $this->Html->link('delete', "delete/$path", array('style' => 'color: red', 'onclick' => "return confirm('" . __('Delete folder %s?', $path) . "')"));
+      $actions[] = $this->Html->link(__('delete'), "delete/$path", array('style' => 'color: red', 'onclick' => "return confirm('" . __('Delete folder %s?', $path) . "')"));
     }
     $row[] = implode('', $actions);
     return $row;
@@ -90,7 +90,7 @@ class FileListHelper extends AppHelper
     $row[] = $file['file'];
     if (isset($file['media_id'])) {
       $mediaLink = $this->Html->link($file['media_id'], '/images/view/'.$file['media_id']);
-      $unlink = $this->Html->link('unlink', "unlink/$path/{$file['file']}", array('style' => 'color: red', 'title' => __('Unlink media from this file')));
+      $unlink = $this->Html->link(__('unlink'), "unlink/$path/{$file['file']}", array('style' => 'color: red', 'title' => __('Unlink media from this file')));
       $row[] = $mediaLink.' '.$unlink;
     } else {
       $row[] = '';
@@ -106,7 +106,7 @@ class FileListHelper extends AppHelper
 
     // Delete link for internal files
     if ($options['isInternal']) {
-      $actions[] = $this->Html->link('delete', "delete/$path/{$file['file']}", array('style' => 'color: red'));
+      $actions[] = $this->Html->link(__('delete'), "delete/$path/{$file['file']}", array('style' => 'color: red'));
     }
     $row[] = implode(' ', $actions);
     return $row;

@@ -3,12 +3,12 @@
  * PHP versions 5
  *
  * phTagr : Tag, Browse, and Share Your Photos.
- * Copyright 2006-2012, Sebastian Felis (sebastian@phtagr.org)
+ * Copyright 2006-2013, Sebastian Felis (sebastian@phtagr.org)
  *
  * Licensed under The GPL-2.0 License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2006-2012, Sebastian Felis (sebastian@phtagr.org)
+ * @copyright     Copyright 2006-2013, Sebastian Felis (sebastian@phtagr.org)
  * @link          http://www.phtagr.org phTagr
  * @package       Phtagr
  * @since         phTagr 2.2b3
@@ -25,11 +25,14 @@ class CacheBehavior extends ModelBehavior
     $this->config[$model->name] = $config;
   }
 
-  /** Deletes all cache files of a given media
-    @param model Reference of model
-    @param data Model data
-    @return True on success */
-  public function deleteCache(&$model, &$data = null) {
+  /**
+   * Deletes all cache files of a given media
+   *
+   * @param array $model Reference of model
+   * @param array $data Model data
+   * @return bool True on success
+   */
+  public function deleteCache(&$model, $data = null) {
     if (!$data) {
       $data = $model->data;
     }
@@ -68,4 +71,3 @@ class CacheBehavior extends ModelBehavior
     return true;
   }
 }
-?>

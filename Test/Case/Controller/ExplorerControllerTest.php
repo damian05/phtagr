@@ -4,12 +4,12 @@
  * PHP versions 5
  *
  * phTagr : Tag, Browse, and Share Your Photos.
- * Copyright 2006-2012, Sebastian Felis (sebastian@phtagr.org)
+ * Copyright 2006-2013, Sebastian Felis (sebastian@phtagr.org)
  *
  * Licensed under The GPL-2.0 License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2006-2012, Sebastian Felis (sebastian@phtagr.org)
+ * @copyright     Copyright 2006-2013, Sebastian Felis (sebastian@phtagr.org)
  * @link          http://www.phtagr.org phTagr
  * @package       Phtagr
  * @since         phTagr 2.2b3
@@ -250,5 +250,39 @@ class ExplorerControllerTest extends ControllerTestCase {
     $mediaIds = Set::extract('/Media/id', $this->Media->find('all'));
     sort($mediaIds);
     $this->assertEquals($mediaIds, array($media2['Media']['id'], $media4['Media']['id']));
+  }
+
+  public function testSelectionDeleteCache() {
+    $userA = $this->Factory->createUser('UserA', ROLE_USER);
+    $userB = $this->Factory->createUser('UserB', ROLE_USER);
+    $media1 = $this->Factory->createMedia('IMG_1234.JPG', $userA);
+    $media2 = $this->Factory->createMedia('IMG_2345.JPG', $userB);
+
+    $Explorer = $this->generate('Explorer', array(
+        'methods' => array('getUser'),
+        'models' => array('Media' => array('deleteCache'))));
+    $Explorer->expects($this->any())->method('getUser')->will($this->returnValue($userA));
+    $Explorer->Media->expects($this->once())->method('deleteCache');
+
+    $mediaIds = array($media1['Media']['id'], $media2['Media']['id']);
+    $data = array('Media' => array('ids' => join(',', $mediaIds)));
+    $this->testAction('/explorer/selection/deleteCache', array('return' => 'vars', 'data' => $data, 'method' => 'post'));
+  }
+
+  public function testSelectionSync() {
+    $userA = $this->Factory->createUser('UserA', ROLE_USER);
+    $userB = $this->Factory->createUser('UserB', ROLE_USER);
+    $media1 = $this->Factory->createMedia('IMG_1234.JPG', $userA);
+    $media2 = $this->Factory->createMedia('IMG_2345.JPG', $userB);
+
+    $Explorer = $this->generate('Explorer', array(
+        'methods' => array('getUser'),
+        'components' => array('FilterManager')));
+    $Explorer->expects($this->any())->method('getUser')->will($this->returnValue($userA));
+    $Explorer->FilterManager->expects($this->once())->method('write');
+
+    $mediaIds = array($media1['Media']['id'], $media2['Media']['id']);
+    $data = array('Media' => array('ids' => join(',', $mediaIds)));
+    $this->testAction('/explorer/selection/sync', array('return' => 'vars', 'data' => $data, 'method' => 'post'));
   }
 }

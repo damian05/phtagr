@@ -4,12 +4,12 @@
  * PHP versions 5
  *
  * phTagr : Tag, Browse, and Share Your Photos.
- * Copyright 2006-2012, Sebastian Felis (sebastian@phtagr.org)
+ * Copyright 2006-2013, Sebastian Felis (sebastian@phtagr.org)
  *
  * Licensed under The GPL-2.0 License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2006-2012, Sebastian Felis (sebastian@phtagr.org)
+ * @copyright     Copyright 2006-2013, Sebastian Felis (sebastian@phtagr.org)
  * @link          http://www.phtagr.org phTagr
  * @package       Phtagr
  * @since         phTagr 2.2b3
@@ -24,7 +24,7 @@ App::uses('PhtagrTestCase', 'Test/Case');
 class MediaWriteTestCase extends PhtagrTestCase {
 
   var $uses = array('Media', 'Option');
-  var $components = array('FilterManager');
+  var $components = array('FilterManager', 'VideoPreview', 'Exiftool');
 
   var $testDir;
   var $autostartController = false;
@@ -39,6 +39,8 @@ class MediaWriteTestCase extends PhtagrTestCase {
 
     $this->testDir = $this->createTestDir();
     $this->setOptionsForExternalTools();
+    $this->Option->setValue($this->Exiftool->stayOpenOption, 1, 0);
+    $this->Option->setValue($this->VideoPreview->createVideoThumbOption, 1, 0);
 
     $this->Option->addValue($this->FilterManager->writeEmbeddedEnabledOption, 1, 0);
     $this->Option->addValue($this->FilterManager->writeSidecarEnabledOption, 1, 0);
@@ -83,8 +85,13 @@ class MediaWriteTestCase extends PhtagrTestCase {
     return $values;
   }
 
-  function testThumbnailCreation() {
+  /**
+   * Test for video thumbnail THM creation without xmp sidecar file
+   */
+  function testVideoThumbnailCreation() {
     $filename = $this->copyResource('MVI_7620.OGG', $this->testDir);
+    $this->FilterManager->VideoFilter->createVideoThumb = true;
+    $this->FilterManager->createSidecarForNonEmbeddableFile = true;
 
     // Insert video and add tag 'thailand'
     $this->FilterManager->read($filename);
@@ -104,6 +111,42 @@ class MediaWriteTestCase extends PhtagrTestCase {
     $this->assertEqual(file_exists($thumb), true);
     $values = $this->extractMeta($thumb);
     $this->assertEqual($values['Keywords'], 'thailand');
+
+    $Folder = new Folder($this->testDir);
+    $files = $Folder->find();
+    $this->assertEqual(count($files), 2);
+  }
+
+  /**
+   * Test for xmp sidecar file creation without video thumbnail THM
+   */
+  function testVideoSidecarCreation() {
+    $filename = $this->copyResource('MVI_7620.OGG', $this->testDir);
+    $this->FilterManager->VideoFilter->createVideoThumb = false;
+    $this->FilterManager->createSidecarForNonEmbeddableFile = true;
+
+    // Insert video and add tag 'thailand'
+    $this->FilterManager->read($filename);
+    $media = $this->Media->find('first');
+    $this->assertNotEqual($media, false);
+    $user = $this->getUser();
+    $this->Media->setAccessFlags($media, $user);
+    $data = array('Field' => array('keyword' => 'thailand'));
+    $tmp = $this->Media->editSingle($media, $data, $user);
+    $this->Media->save($tmp);
+
+    $media = $this->Media->findById($media['Media']['id']);
+    $result = $this->FilterManager->write($media);
+    $this->assertEqual($result, true);
+
+    $xmp = dirname($filename) . DS . 'MVI_7620.xmp';
+    $this->assertEqual(file_exists($xmp), true);
+    $values = $this->extractMeta($xmp);
+    $this->assertEqual($values['Subject'], 'thailand');
+
+    $Folder = new Folder($this->testDir);
+    $files = $Folder->find();
+    $this->assertEqual(count($files), 2);
   }
 
   function testImageMetaData() {

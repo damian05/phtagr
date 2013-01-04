@@ -3,12 +3,12 @@
  * PHP versions 5
  *
  * phTagr : Tag, Browse, and Share Your Photos.
- * Copyright 2006-2012, Sebastian Felis (sebastian@phtagr.org)
+ * Copyright 2006-2013, Sebastian Felis (sebastian@phtagr.org)
  *
  * Licensed under The GPL-2.0 License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2006-2012, Sebastian Felis (sebastian@phtagr.org)
+ * @copyright     Copyright 2006-2013, Sebastian Felis (sebastian@phtagr.org)
  * @link          http://www.phtagr.org phTagr
  * @package       Phtagr
  * @since         phTagr 2.2b3
@@ -40,6 +40,7 @@ class MediaReadTestCase extends PhtagrTestCase {
 
     $this->testDir = $this->createTestDir();
     $this->setOptionsForExternalTools();
+    $this->Option->setValue($this->Exiftool->stayOpenOption, 1, 0);
 
     $this->Option->addValue($this->FilterManager->writeEmbeddedEnabledOption, 1, 0);
     $this->Option->addValue($this->FilterManager->writeSidecarEnabledOption, 1, 0);
@@ -220,9 +221,21 @@ class MediaReadTestCase extends PhtagrTestCase {
     $this->assertEqual($media['Media']['longitude'], -71.7819);
   }
 
-  public function testVideoRead() {
+  public function testVideo() {
     date_default_timezone_set('Europe/Belgrade');
-    $this->copyResource(array('MVI_7620.OGG','MVI_7620.THM', 'example.gpx'), $this->testDir);
+    $this->copyResource('MVI_7620.MOV', $this->testDir);
+    $this->Controller->FilterManager->readFiles($this->testDir);
+
+    $media = $this->Media->find('first');
+    $this->assertEqual($media['Media']['date'], '2007-10-14 08:09:57');
+    $this->assertEqual($media['Media']['width'], '640');
+    $this->assertEqual($media['Media']['height'], '480');
+    $this->assertEqual($media['Media']['duration'], '5');
+  }
+
+  public function testVideoWithThumb() {
+    date_default_timezone_set('Europe/Belgrade');
+    $this->copyResource(array('MVI_7620.MOV','MVI_7620.THM', 'example.gpx'), $this->testDir);
 
     $this->Controller->FilterManager->readFiles($this->testDir);
     $count = $this->Media->find('count');
@@ -232,6 +245,9 @@ class MediaReadTestCase extends PhtagrTestCase {
     $keywords = Set::extract('/Field[name=keyword]/data', $media);
     $this->assertEqual($keywords, array('thailand'));
 
+    $this->assertEqual($media['Media']['width'], '640');
+    $this->assertEqual($media['Media']['height'], '480');
+    $this->assertEqual($media['Media']['duration'], '5');
     $this->assertEqual($media['Media']['date'], '2007-10-14 10:09:57');
     $this->assertEqual($media['Media']['latitude'], 46.5761);
     $this->assertEqual($media['Media']['longitude'], 8.89242);

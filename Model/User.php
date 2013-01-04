@@ -3,12 +3,12 @@
  * PHP versions 5
  *
  * phTagr : Tag, Browse, and Share Your Photos.
- * Copyright 2006-2012, Sebastian Felis (sebastian@phtagr.org)
+ * Copyright 2006-2013, Sebastian Felis (sebastian@phtagr.org)
  *
  * Licensed under The GPL-2.0 License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2006-2012, Sebastian Felis (sebastian@phtagr.org)
+ * @copyright     Copyright 2006-2013, Sebastian Felis (sebastian@phtagr.org)
  * @link          http://www.phtagr.org phTagr
  * @package       Phtagr
  * @since         phTagr 2.2b3
@@ -105,12 +105,12 @@ class User extends AppModel
         unset($this->data['User']['confirm']);
         unset($this->data['User']['password']);
       } elseif (empty($this->data['User']['password'])) {
-        $this->invalidate('password', __('Password not given', true));
+        $this->invalidate('password', __('Password not given'));
       } elseif (empty($this->data['User']['confirm'])) {
-        $this->invalidate('confirm', __('Password confirmation is missing', true));
+        $this->invalidate('confirm', __('Password confirmation is missing'));
       } elseif ($this->data['User']['password'] != $this->data['User']['confirm']) {
-        $this->invalidate('password', __('Password confirmation mismatch', true));
-        $this->invalidate('confirm', __('Password confirmation mismatch', true));
+        $this->invalidate('password', __('Password confirmation mismatch'));
+        $this->invalidate('confirm', __('Password confirmation mismatch'));
       }
     }
     $id = false;
@@ -122,7 +122,7 @@ class User extends AppModel
     if (isset($this->data['User']['username']) && $id) {
       $other = $this->find('first', array('conditions' => array('User.username' => $this->data['User']['username']), 'recursive' => -1));
       if ($other && $other['User']['id'] != $id) {
-        $this->invalidate('username', __('Username already taken', true));
+        $this->invalidate('username', __('Username already taken'));
       }
     }
     return true;
