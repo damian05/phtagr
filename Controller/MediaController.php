@@ -247,7 +247,7 @@ class MediaController extends AppController
       } else {
         $filename = $this->PreviewManager->getPreview($media, $format);
         if (is_readable($filename)) {
-          $name = $media['File'][0]['file'];
+          $name = substr($media['File'][0]['file'], 0, strrpos($media['File'][0]['file'], '.')) . '.jpg';
           $files[] = array('name' => $format . '/' . $name, 'filename' => $filename, 'size' => filesize($filename));
         }
       }
