@@ -864,6 +864,11 @@ class ExiftoolComponent extends Component {
 
     // Associations to meta data: Tags, Categories, Locations
     foreach ($usedFieldMap as $field => $name) {
+      //do not write faces/people to metadata; it is a structured field; just read
+      //do not write to file faces read from picasa.ini
+      if ($name === 'RegionPersonDisplayName') {
+        continue;
+      }
       $isList = $this->controller->Media->Field->isListField($field);
       //hack to allow two names with the same key (field)
       if ($field === 'keyword2') {
